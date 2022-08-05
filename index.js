@@ -1,10 +1,22 @@
 const express = require('express')
 const app = express()
 const path = require('path')
+const MongoClient = require('mongodb').MongoClient
+require('dotenv').config()
+const uri = process.env.URI
 
-app.listen(8080,()=>{
-  console.log('8080포트로 접속완료')
-})
+
+let db
+  MongoClient.connect(uri, function(에러, client){
+    if (에러) return console.log(에러)
+    db = client.db('todoapp')
+    db.collection('post').insertOne({이름: '준호', 나이: 20},(에러,결과)=>{
+      console.log('저장완료')
+    })
+    app.listen(8080, function() {
+      console.log('listening on 8080')
+    })
+  })
 
 app.use(express.static(path.join(__dirname, 'my-app/build')));
 
